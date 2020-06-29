@@ -175,6 +175,13 @@ class Hessian2Writer
             $classdef->type = $class;
             if ($class == 'stdClass') {
                 $classdef->props = array_keys(get_object_vars($value));
+                /**php stdClass -> java类名**/
+                if ($value->__type) {
+                    $class = $value->__type;
+                    $classdef->type = $value->__type;
+                    echo $classdef->type;
+                }
+                /**php stdClass -> java类名**/
             } else
                 $classdef->props = array_keys(get_class_vars($class));
             $index = $this->refmap->addClassDef($classdef);
