@@ -1,0 +1,11 @@
+{
+  "name": "com.bj58.zhuanzhuan.arch/zzscf.php",
+  "require": {
+    "php": ">=7.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "": "src"
+    }
+  }
+}
