@@ -61,8 +61,8 @@ class Invoker
         $this->write($data, $socket);
         $responseData = $this->read($socket);
         $response = $codec->decode($responseData)->getBody();
-        if ($response->getException) {
-            throw $response->getException;
+        if ($response->getException()) {
+            throw $response->getException();
         } else {
             return $response->getResult();
         }
@@ -116,7 +116,7 @@ class Invoker
     public function encode(Request $request): array
     {
         $codec = new ScfCodec($this->typeMap);
-        $data = $codec->encode(Message::newRequest($request, Application::getInstance()->getCallerKey()));
+        $data = $codec->encode(Message::newRequest($request, Application::class->getCallerKey()));
         return array($codec, $data);
     }
 

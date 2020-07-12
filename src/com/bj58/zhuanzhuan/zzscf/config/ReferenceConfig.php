@@ -4,42 +4,21 @@
 namespace com\bj58\zhuanzhuan\zzscf\config;
 
 
-use com\bj58\zhuanzhuan\zzscf\contract\Contract;
-use com\bj58\zhuanzhuan\zzscf\invoke\Invoker;
-use com\bj58\zhuanzhuan\zzscf\proxy\Proxy;
-
 class ReferenceConfig
 {
-    private ?string $lookup;
-    private string $serviceName;
-    private Contract $contract;
-    private ?ServiceReferenceConfig $localConfig;
+    private ?string  $serviceName;
 
-    public function ref(): Proxy
-    {
-        $serverNodes = $this->localConfig->getServerNodes();
-        $invokers = array();
-        foreach ($serverNodes as $serverNode){
-            $invoker = new Invoker($this->contract->getRemoteInterfaceName(), $this->lookup, $this->contract->getTypeMap(), $serverNode, $this->localConfig->getRpcArgs());
-            $invokers[] = $invoker;
-        }
-        return new Proxy($invokers, $this->contract);
-    }
+    private ?RpcArgs $rpcArgs;
+
+    private array $serverNodes;
 
     /**
-     * @return string
+     * ServiceReferenceConfig constructor.
      */
-    public function getLookup(): string
+    public function __construct()
     {
-        return $this->lookup;
-    }
-
-    /**
-     * @param string $lookup
-     */
-    public function setLookup(string $lookup): void
-    {
-        $this->lookup = $lookup;
+        $this->rpcArgs = new RpcArgs();
+        $this->serverNodes = array();
     }
 
     /**
@@ -58,39 +37,39 @@ class ReferenceConfig
         $this->serviceName = $serviceName;
     }
 
+
+
     /**
-     * @return Contract
+     * @return RpcArgs
      */
-    public function getContract(): Contract
+    public function getRpcArgs(): RpcArgs
     {
-        return $this->contract;
+        return $this->rpcArgs;
     }
 
     /**
-     * @param Contract $contract
+     * @param RpcArgs $rpcArgs
      */
-    public function setContract(Contract $contract): void
+    public function setRpcArgs(RpcArgs $rpcArgs): void
     {
-        $this->contract = $contract;
+        $this->rpcArgs = $rpcArgs;
     }
 
     /**
-     * @return ServiceReferenceConfig
+     * @return array
      */
-    public function getLocalConfig(): ServiceReferenceConfig
+    public function getServerNodes(): array
     {
-        return $this->localConfig;
+        return $this->serverNodes;
     }
 
     /**
-     * @param ServiceReferenceConfig $localConfig
+     * @param array $serverNodes
      */
-    public function setLocalConfig(ServiceReferenceConfig $localConfig): void
+    public function setServerNodes(array $serverNodes): void
     {
-        $this->localConfig = $localConfig;
+        $this->serverNodes = $serverNodes;
     }
-
-
 
 
 }

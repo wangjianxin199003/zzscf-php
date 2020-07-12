@@ -192,7 +192,6 @@ class Hessian2Writer
                 if ($value->__type) {
                     $class = $value->__type;
                     $classdef->type = $value->__type;
-                    echo $classdef->type;
                 }
                 /**php stdClass -> java类名**/
             } else{
@@ -227,16 +226,22 @@ class Hessian2Writer
 
         $this->refmap->objectlist[] = $value;
         $classdef = $this->refmap->classlist[$index];
-        $objectFactory = $this->options->objectFactory;
-        $reflection = $objectFactory->getObjectReflectionClass($classdef->type);
-        foreach ($classdef->props as $key) {
-            $val = null;
-            if ($reflection->hasProperty($key)) {
-                $property = $reflection->getProperty($key);
-                $property->setAccessible(true);
-                $val = $property->getValue($value);
-            };
-            $stream .= $this->writeValue($val);
+        if (get_class($value) === 'stdClass'){
+            foreach ($classdef->props as $key){
+                $stream .= $this->writeValue($value->$key);
+            }
+        }else{
+            $objectFactory = $this->options->objectFactory;
+            $reflection = $objectFactory->getObjectReflectionClass($classdef->type);
+            foreach ($classdef->props as $key) {
+                $val = null;
+                if ($reflection->hasProperty($key)) {
+                    $property = $reflection->getProperty($key);
+                    $property->setAccessible(true);
+                    $val = $property->getValue($value);
+                };
+                $stream .= $this->writeValue($val);
+            }
         }
 
         return $stream;

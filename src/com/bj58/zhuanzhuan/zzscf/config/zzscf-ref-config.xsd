@@ -1,0 +1,90 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:zzscf="http://www.zhuanzhuan.com/schema/zzscf-ref-config"
+            targetNamespace="http://www.zhuanzhuan.com/schema/zzscf-ref-config"
+            elementFormDefault="qualified">
+
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+
+    <xsd:element name="referenceConfig" type="zzscf:referenceConfigType">
+    </xsd:element>
+
+
+    <xsd:complexType name="referenceConfigType">
+        <xsd:sequence>
+            <xsd:element name="rpcArgs" type="zzscf:rpcArgsType" maxOccurs="1" minOccurs="0"/>
+            <xsd:element name="nodes" type="zzscf:nodesType" maxOccurs="1" minOccurs="1"/>
+        </xsd:sequence>
+        <xsd:attribute name="serviceName" type="xsd:string" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="rpcArgsType">
+        <xsd:sequence>
+            <xsd:element name="method" type="zzscf:method" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="timeout" type="xsd:positiveInteger" use="optional"/>
+        <xsd:attribute name="connectTimeout" type="xsd:positiveInteger" use="optional"/>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="nodesType">
+        <xsd:sequence>
+            <xsd:element name="node" type="zzscf:nodeType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="nodeType">
+        <xsd:attribute name="host" type="xsd:string" use="required"/>
+        <xsd:attribute name="port" type="xsd:int" use="required"/>
+        <xsd:attribute name="version" type="zzscf:zzscfVersionType" use="optional"/>
+        <xsd:attribute name="idc" type="zzscf:idcType" use="optional"/>
+        <xsd:attribute name="systemEnv" type="zzscf:systemEnvType" use="optional"/>
+        <xsd:attribute name="weight" type="xsd:int" use="optional"/>
+    </xsd:complexType>
+
+
+    <xsd:simpleType name="serializationType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="SCF"/>
+            <xsd:enumeration value="SCFV4"/>
+            <xsd:enumeration value="hessian2"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="protocolType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="V1"/>
+            <xsd:enumeration value="V2"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="zzscfVersionType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="\d+\.\d+\.\d+(-SNAPSHOT)?"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="idcType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="bjm6"/>
+            <xsd:enumeration value="tjbh"/>
+            <xsd:enumeration value="tjwq"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="systemEnvType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="testserver"/>
+            <xsd:enumeration value="teststable"/>
+            <xsd:enumeration value="sandbox"/>
+            <xsd:enumeration value="sandboxstable"/>
+            <xsd:enumeration value="online"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="method">
+        <xsd:attribute name="methodKey" type="xsd:string" use="required"/>
+        <xsd:attribute name="timeout" type="xsd:positiveInteger" use="required"/>
+    </xsd:complexType>
+
+
+</xsd:schema>

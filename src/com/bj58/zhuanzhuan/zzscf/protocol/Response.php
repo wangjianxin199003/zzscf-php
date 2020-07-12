@@ -26,20 +26,21 @@ class Response
     }
 
     /**
-     * @return \Throwable
+     * @return \Throwable|null
      */
-    public function getException(): \Throwable
+    public function getException(): ?\Throwable
     {
         return $this->exception;
     }
 
     /**
-     * @param \Throwable $exception
+     * @param \Throwable|null $exception
      */
-    public function setException(\Throwable $exception): void
+    public function setException(?\Throwable $exception): void
     {
         $this->exception = $exception;
     }
+
 
 
 }

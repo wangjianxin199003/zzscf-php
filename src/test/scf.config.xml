@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<note xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:zzscf="http://www.zhuanzhuan.com/schema/zzscf-ref-config"
+       xsi:schemaLocation="http://www.zhuanzhuan.com/schema/zzscf-ref-config http://www.zhuanzhuan.com/schema/zzscf/zzscf-ref-config.xsd">
+
+    <zzscf:referenceConfig serviceName="servertest1">
+         <zzscf:nodes>
+            <zzscf:node host="127.0.0.1" port="16546" version="1.1.18-SNAPSHOT" idc="bjm6"  systemEnv="testserver"/>
+        </zzscf:nodes>
+    </zzscf:referenceConfig>
+
+    <zzscf:referenceConfig serviceName="servertest2">
+        <zzscf:rpcArgs timeout="1000" connectTimeout="1000">
+        </zzscf:rpcArgs>
+        <zzscf:nodes>
+            <zzscf:node host="192.168.188.50" port="16546" version="1.1.18-SNAPSHOT" idc="bjm6"
+                        systemEnv="testserver"/>
+        </zzscf:nodes>
+    </zzscf:referenceConfig>
+</note>

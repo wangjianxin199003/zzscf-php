@@ -6,7 +6,11 @@ namespace com\bj58\zhuanzhuan\zzscf\config;
 
 class ApplicationConfig
 {
+    static protected $instance;
+
     private ?string $callerKey = '';
+
+    private ?array $localServiceRefConfigs = array();
 
     /**
      * @return string
@@ -19,9 +23,25 @@ class ApplicationConfig
     /**
      * @param string $callerKey
      */
-    public function setCallerKey(string $callerKey): void
+    protected function setCallerKey(string $callerKey): void
     {
         $this->callerKey = $callerKey;
     }
 
+    /**
+     * @return array|null
+     */
+    public function getLocalServiceRefConfigs(): ?array
+    {
+        return $this->localServiceRefConfigs;
+    }
+
+    /**
+     * @param array|null $localServiceRefConfig
+     */
+    protected function setLocalServiceRefConfigs(?array $localServiceRefConfigs): void
+    {
+        $this->localServiceRefConfigs = $localServiceRefConfigs;
+    }
 }
+
