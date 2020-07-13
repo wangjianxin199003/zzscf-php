@@ -24,7 +24,7 @@ class Reference
         $serverNodes = $refConfig->getServerNodes();
         $invokers = array();
         foreach ($serverNodes as $serverNode) {
-            $invoker = new Invoker($this->contract->getRemoteInterfaceName(), $this->lookup, $this->contract->getTypeMap(), $serverNode, $refConfig->getRpcArgs());
+            $invoker = new Invoker($this->serviceName, $this->contract->getRemoteInterfaceName(), $this->lookup, $this->contract->getTypeMap(), $serverNode, $refConfig->getRpcArgs());
             $invokers[] = $invoker;
         }
         return new Proxy($invokers, $this->contract);

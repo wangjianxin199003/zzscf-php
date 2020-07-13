@@ -23,7 +23,7 @@ class ApplicationConfig
     /**
      * @param string $callerKey
      */
-    protected function setCallerKey(string $callerKey): void
+    public function setCallerKey(string $callerKey): void
     {
         $this->callerKey = $callerKey;
     }
@@ -39,7 +39,7 @@ class ApplicationConfig
     /**
      * @param array|null $localServiceRefConfig
      */
-    protected function setLocalServiceRefConfigs(?array $localServiceRefConfigs): void
+    public function setLocalServiceRefConfigs(?array $localServiceRefConfigs): void
     {
         $this->localServiceRefConfigs = $localServiceRefConfigs;
     }

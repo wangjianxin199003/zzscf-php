@@ -72,11 +72,7 @@ class Application
         }
         // 解析
         if ($configXmlString) {
-            $xml = new \DOMDocument($configXmlString);
-            $refConfig = ServiceReferenceConfigUtil::parserServiceReferenceConfig($xml);
-            if ($refConfig && count($refConfig) > 0) {
-                return $refConfig[0];
-            }
+            return ServiceReferenceConfigUtil::parseConfigFromSimpleXml($configXmlString);
         }
         // 本地配置
         return Application::$instance->localReferenceConfigs[$serviceName];
@@ -127,7 +123,7 @@ class Application
      * @param string $filePath
      * @return mixed
      */
-    private static function readConfigFromFile(string $filePath): mixed
+    private static function readConfigFromFile(string $filePath)
     {
         if (file_exists($filePath)) {
             $modifyTime = filemtime($filePath);

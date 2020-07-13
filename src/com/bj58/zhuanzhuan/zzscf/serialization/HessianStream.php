@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 namespace com\bj58\zhuanzhuan\zzscf\serialization;
+use Exception;
+
 /**
  * Represents a stream of bytes used for reading
  * It doesn't use any of the string length functions typically used
