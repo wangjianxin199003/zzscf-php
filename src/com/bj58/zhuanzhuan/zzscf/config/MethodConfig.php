@@ -6,8 +6,8 @@ namespace com\bj58\zhuanzhuan\zzscf\config;
 
 class MethodConfig
 {
-    private string $methodKey;
-    private int  $timeout;
+    private  $methodKey;
+    private  $timeout;
 
     /**
      * @return string

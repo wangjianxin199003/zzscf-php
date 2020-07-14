@@ -6,11 +6,11 @@ namespace com\bj58\zhuanzhuan\zzscf\protocol;
 
 class Request
 {
-    private ?string  $lookup;
-    private string $methodName;
-    private ?array $paraKVList;
-    private ?string $interfaceName;
-    private ?array  $attachments = null;
+    private   $lookup;
+    private  $methodName;
+    private  $paraKVList;
+    private $interfaceName;
+    private  $attachments = null;
 
     /**
      * @return string|null

@@ -11,9 +11,9 @@ use com\bj58\zhuanzhuan\zzscf\invoke\Invocation;
 
 class Proxy
 {
-    private array $invokers;
+    private  $invokers;
 
-    private Contract $contract;
+    private  $contract;
 
     /**
      * Proxy constructor.

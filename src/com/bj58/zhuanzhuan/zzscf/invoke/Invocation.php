@@ -6,9 +6,9 @@ namespace com\bj58\zhuanzhuan\zzscf\invoke;
 
 class Invocation
 {
-    private string  $methodName;
-    private ?array $args;
-    private ?array $parameterTypes;
+    private  $methodName;
+    private $args;
+    private $parameterTypes;
 
     /**
      * @return string

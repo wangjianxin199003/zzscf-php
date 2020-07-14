@@ -6,11 +6,11 @@ namespace com\bj58\zhuanzhuan\zzscf\config;
 
 class ReferenceConfig
 {
-    private ?string  $serviceName;
+    private  $serviceName;
 
-    private ?RpcArgs $rpcArgs;
+    private  $rpcArgs;
 
-    private array $serverNodes;
+    private $serverNodes;
 
     /**
      * ServiceReferenceConfig constructor.

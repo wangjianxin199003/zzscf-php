@@ -17,13 +17,13 @@ class Message
     const RESET = 6;
     const STRING_KEY = 7;
 
-    private int $version;
-    private int $id;
-    private int $type;
-    private ?string $callerKey;
+    private  $version;
+    private  $id;
+    private  $type;
+    private  $callerKey;
     private  $body;
-    private ?string $tiresiasData = '';
-    private int $platform;
+    private  $tiresiasData = '';
+    private  $platform;
 
 
     public static function newRequest(Request $request, string $callerKey)

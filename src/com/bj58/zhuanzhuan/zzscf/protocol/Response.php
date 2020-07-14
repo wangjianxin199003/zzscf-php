@@ -7,7 +7,7 @@ namespace com\bj58\zhuanzhuan\zzscf\protocol;
 class Response
 {
     private $result;
-    private ?\Throwable $exception;
+    private  $exception;
 
     /**
      * @return mixed

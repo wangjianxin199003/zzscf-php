@@ -34,7 +34,7 @@ define('HESSIAN_PHP_VERSION', '2.0');
 class HessianObjectFactory implements IHessianObjectFactory
 {
     var $options;
-    private array $reflectionMap = array();
+    private  $reflectionMap = array();
 
     public function setOptions(HessianOptions $options)
     {

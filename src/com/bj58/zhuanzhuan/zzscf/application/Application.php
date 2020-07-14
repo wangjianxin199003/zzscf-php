@@ -10,11 +10,11 @@ use com\bj58\zhuanzhuan\zzscf\util\ReferenceConfigUtil;
 
 class Application
 {
-    private static ?Application $instance = null;
+    private static  $instance = null;
 
-    private ?string $callerKey = '';
+    private  $callerKey = '';
 
-    protected ?array $localReferenceConfigs = array();
+    protected $localReferenceConfigs = array();
 
     /**
      * Application constructor.

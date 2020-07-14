@@ -19,24 +19,24 @@ use com\bj58\zhuanzhuan\zzscf\protocol\ScfCodec;
 
 class Invoker
 {
-    static array $protocolTypeMap = array('com\bj58\zhuanzhuan\zzscf\protocol\Request' => 'com.bj58.spat.scf.protocol.sdp.RequestProtocol',
+    static  $protocolTypeMap = array('com\bj58\zhuanzhuan\zzscf\protocol\Request' => 'com.bj58.spat.scf.protocol.sdp.RequestProtocol',
         'com\bj58\zhuanzhuan\zzscf\protocol\Response' => 'com.bj58.spat.scf.protocol.sdp.ResponseProtocol',
         'com\bj58\zhuanzhuan\zzscf\protocol\KeyValuePair' => 'com.bj58.spat.scf.protocol.utility.KeyValuePair',
         'com\bj58\zhuanzhuan\zzscf\protocol\Exception' => 'com.bj58.spat.scf.protocol.sdp.ExceptionProtocol',
         'com\bj58\zhuanzhuan\zzscf\protocol\Reset' => 'com.bj58.spat.scf.protocol.sdp.ResetProtocol');
-    private string $interfaceName;
+    private  $interfaceName;
 
-    private string $lookup;
+    private $lookup;
 
-    private array $typeMap;
+    private  $typeMap;
 
-    private ServerNode $serverNode;
+    private $serverNode;
 
-    private RpcArgs $rpcArgs;
+    private $rpcArgs;
 
-    private string $serviceName;
+    private  $serviceName;
 
-    private string $descString;
+    private  $descString;
 
 
     /**
@@ -85,7 +85,7 @@ class Invoker
         try {
             $message = $codec->decode($responseHeader . $responseBody);
         } catch (\Throwable $e) {
-            throw new RpcException(RpcExceptionCode::$CLIENT_DECODE_ERROR, 'decode data error from ' . $this->descString);
+            throw new RpcException(RpcExceptionCode::$CLIENT_DECODE_ERROR, 'decode data error from ' . $this->descString, $e);
         }
         $response = $message->getBody();
         if ($response instanceof Response) {

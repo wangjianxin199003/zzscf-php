@@ -6,8 +6,8 @@ namespace com\bj58\zhuanzhuan\zzscf\config;
 
 class RpcArgs
 {
-    private int  $timeout = 1000;
-    private int $connectTimeout = 500;
+    private  $timeout = 1000;
+    private  $connectTimeout = 500;
 
     /**
      * @return int

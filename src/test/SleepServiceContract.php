@@ -5,10 +5,10 @@ namespace test;
 
 use com\bj58\zhuanzhuan\zzscf\contract\AbstractContract;
 
-class SleepService extends AbstractContract
+class SleepServiceContract extends AbstractContract
 {
-    private array $parameterTypeMap = array('sleep' => array('long'
-    ));
+    private  $parameterTypeMap = array('sleep' => array('long'
+    ), 'sleep1' => array('long'));
 
 
     function getRemoteParameterTypes(string $methodName): array

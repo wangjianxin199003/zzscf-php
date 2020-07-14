@@ -6,9 +6,9 @@ namespace com\bj58\zhuanzhuan\zzscf\protocol;
 
 class Exception
 {
-    private int $errorCode;
+    private  $errorCode;
 
-    private string $errorMsg;
+    private  $errorMsg;
 
     /**
      * @return int

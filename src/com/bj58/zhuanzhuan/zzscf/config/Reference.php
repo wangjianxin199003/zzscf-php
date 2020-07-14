@@ -11,9 +11,9 @@ use com\bj58\zhuanzhuan\zzscf\proxy\Proxy;
 
 class Reference
 {
-    private ?string $lookup;
-    private string $serviceName;
-    private Contract $contract;
+    private  $lookup = '';
+    private  $serviceName;
+    private  $contract;
 
     public function ref(): Proxy
     {

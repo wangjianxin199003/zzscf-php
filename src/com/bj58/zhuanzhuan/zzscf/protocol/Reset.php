@@ -6,7 +6,7 @@ namespace com\bj58\zhuanzhuan\zzscf\protocol;
 
 class Reset
 {
-    private string $msg;
+    private  $msg;
 
     /**
      * @return string

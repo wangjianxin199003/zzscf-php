@@ -6,11 +6,11 @@ namespace com\bj58\zhuanzhuan\zzscf\config;
 
 class ServerNode
 {
-    private string  $host;
-    private int  $port;
-    private ?string $version;
-    private ?string $idc;
-    private ?string $systemEnv;
+    private  $host;
+    private   $port;
+    private  $version;
+    private  $idc;
+    private  $systemEnv;
 
     /**
      * @return string

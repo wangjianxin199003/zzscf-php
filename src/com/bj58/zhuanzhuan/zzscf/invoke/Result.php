@@ -7,7 +7,7 @@ namespace com\bj58\zhuanzhuan\zzscf\invoke;
 class Result
 {
     private $value;
-    private ?\Throwable $exception;
+    private  $exception;
 
     /**
      * @return mixed

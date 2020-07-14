@@ -6,7 +6,7 @@ namespace com\bj58\zhuanzhuan\zzscf\protocol;
 
 class KeyValuePair
 {
-    private string $key;
+    private  $key;
     private $value;
 
     /**

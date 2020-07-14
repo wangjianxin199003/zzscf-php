@@ -8,9 +8,9 @@ class ApplicationConfig
 {
     static protected $instance;
 
-    private ?string $callerKey = '';
+    private  $callerKey = '';
 
-    private ?array $localServiceRefConfigs = array();
+    private  $localServiceRefConfigs = array();
 
     /**
      * @return string

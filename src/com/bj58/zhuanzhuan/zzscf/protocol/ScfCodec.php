@@ -11,7 +11,7 @@ class ScfCodec
     const HEADER_LENGTH = 14;
     const TIRESIAS_LENGTH_FIELD_LENGTH = 2;
     const KEY_LENGTH_FIELD_LENGTH = 2;
-    private array $typeMap;
+    private  $typeMap;
 
     /**
      * ScfCodec constructor.
@@ -90,6 +90,10 @@ class ScfCodec
         $serialization = unpack('c', $data, 17);
 //        echo "serialization" . $serialization[1] . "\n";
         $platform = unpack('c', $data, 18);
+        if ($version[1] === 2){
+            $tiresiasLength = unpack('s', $data, 19);
+            $keyLength = unpack('s', $data, 21 + $tiresiasLength[1]);
+        }
 
         $message->setPlatform($platform[1]);
 
@@ -100,7 +104,12 @@ class ScfCodec
         $options->typeMap = $this->typeMap;
         $length = strlen($data) - 14 - 10;
 //        echo 'bodyLength' . $length . "\n";
-        $bodyData = substr($data, 19, $length);
+        $bodyData = '';
+        if ($version[1] === 2){
+            $bodyData = substr($data, 19 + 2 + 2 + $tiresiasLength[1] + $keyLength[1], $length);
+        }else{
+            $bodyData = substr($data, 19 , $length);
+        }
         $reader = $hessianFactory->getParser(new HessianStream($bodyData, null), $options);
         $body = $reader->parse();
         $message->setBody($body);

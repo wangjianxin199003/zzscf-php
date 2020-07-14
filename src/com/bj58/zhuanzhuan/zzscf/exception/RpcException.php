@@ -6,7 +6,7 @@ namespace com\bj58\zhuanzhuan\zzscf\exception;
 
 class RpcException extends \Exception
 {
-    private ?string $errorCode = '';
+    private  $errorCode = '';
 
     /**
      * RpcException constructor.

@@ -6,7 +6,7 @@ namespace test;
 
 use com\bj58\zhuanzhuan\zzscf\contract\AbstractContract;
 
-class StudentService extends AbstractContract
+class StudentServiceContract extends AbstractContract
 {
     private array $parameterTypes = array("getStudent" => array('long', 'String', 'int',
     ), "saveStudent"=>array('Student'));
