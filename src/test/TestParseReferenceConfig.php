@@ -3,13 +3,13 @@
 
 namespace test;
 
-use com\bj58\zhuanzhuan\zzscf\util\ServiceReferenceConfigUtil;
+use com\bj58\zhuanzhuan\zzscf\util\ReferenceConfigUtil;
 
 require '..\..\vendor\autoload.php';
 
 $xml = new \DOMDocument();
 $xml->load('scf.config.xml');
-$configs = ServiceReferenceConfigUtil::parserServiceReferenceConfig($xml);
+$configs = ReferenceConfigUtil::parserMultiFromXmlDOMDocument($xml);
 foreach ($configs as $config) {
     var_dump($config);
 }

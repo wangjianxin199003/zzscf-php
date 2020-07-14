@@ -6,7 +6,7 @@ namespace com\bj58\zhuanzhuan\zzscf\application;
 
 use com\bj58\zhuanzhuan\zzscf\config\ApplicationConfig;
 use com\bj58\zhuanzhuan\zzscf\config\ReferenceConfig;
-use com\bj58\zhuanzhuan\zzscf\util\ServiceReferenceConfigUtil;
+use com\bj58\zhuanzhuan\zzscf\util\ReferenceConfigUtil;
 
 class Application
 {
@@ -72,7 +72,7 @@ class Application
         }
         // 解析
         if ($configXmlString) {
-            return ServiceReferenceConfigUtil::parseConfigFromSimpleXml($configXmlString);
+            return ReferenceConfigUtil::parseSingleFromSimpleXmlString($configXmlString);
         }
         // 本地配置
         return Application::$instance->localReferenceConfigs[$serviceName];

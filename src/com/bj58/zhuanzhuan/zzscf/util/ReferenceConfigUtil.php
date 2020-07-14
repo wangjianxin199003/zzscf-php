@@ -8,9 +8,9 @@ use com\bj58\zhuanzhuan\zzscf\config\RpcArgs;
 use com\bj58\zhuanzhuan\zzscf\config\ServerNode;
 use com\bj58\zhuanzhuan\zzscf\config\ReferenceConfig;
 
-class ServiceReferenceConfigUtil
+class ReferenceConfigUtil
 {
-    public static function parserServiceReferenceConfig(\DOMDocument $xml): array {
+    public static function parserMultiFromXmlDOMDocument(\DOMDocument $xml): array {
         $refConfigs = array();
         $configs = $xml->getElementsByTagName("referenceConfig");
         foreach ($configs as $config) {
@@ -66,7 +66,7 @@ class ServiceReferenceConfigUtil
         return $refConfig;
     }
 
-    public static function parseConfigFromSimpleXml(string $xmlString):ReferenceConfig{
+    public static function parseSingleFromSimpleXmlString(string $xmlString):ReferenceConfig{
         $element = @simplexml_load_string($xmlString);
         $config = new ReferenceConfig();
         if ($element){
