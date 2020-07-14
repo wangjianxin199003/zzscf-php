@@ -22,6 +22,12 @@ class RpcExceptionCode
     public static string $REQUEST_TIMEOUT = 'REQUEST_TIMEOUT';
     // 接收数据失败
     public static string $RECEIVE_DATA_ERROR = 'RECEIVE_DATA_ERROR';
+    // 服务端正在关闭
+    public static string $SERVER_IS_SHUTTING_DOWN = 'SERVER_IS_SHUTTING_DOWN';
+    //
+    public static string $EXCEPTION = 'EXCEPTION';
+
+    public static string $UNDEFINED_RESPONSE = 'UNDEFINED_RESPONSE';
 
 
 }

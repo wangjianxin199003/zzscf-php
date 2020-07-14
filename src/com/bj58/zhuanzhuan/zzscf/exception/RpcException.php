@@ -6,13 +6,24 @@ namespace com\bj58\zhuanzhuan\zzscf\exception;
 
 class RpcException extends \Exception
 {
-
+    private ?string $errorCode = '';
 
     /**
      * RpcException constructor.
      */
-    public function __construct(string $errorCode, string $message='', \Throwable $cause = null)
+    public function __construct( $errorCode, string $message='', \Throwable $cause = null)
     {
-        parent::__construct($message, $errorCode, $cause);
+        $this->errorCode = $errorCode;
+        parent::__construct($message, 0, $cause);
     }
+
+    /**
+     * @return string|null
+     */
+    public function getErrorCode(): ?string
+    {
+        return $this->errorCode;
+    }
+
+
 }

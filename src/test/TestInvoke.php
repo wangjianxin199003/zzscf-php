@@ -6,13 +6,17 @@ use com\bj58\zhuanzhuan\zzscf\config\ApplicationConfig;
 use com\bj58\zhuanzhuan\zzscf\config\Reference;
 use com\bj58\zhuanzhuan\zzscf\config\ServerNode;
 use com\bj58\zhuanzhuan\zzscf\config\ReferenceConfig;
+use com\bj58\zhuanzhuan\zzscf\util\ServiceReferenceConfigUtil;
 use test\SleepService;
 use test\Student;
 use test\StudentService;
 
 require '..\..\vendor\autoload.php';
 $applicationConfig = new ApplicationConfig();
-$applicationConfig->setCallerKey('Tm8dDO1dPUY4QqRU8r/kAw==');
+//$applicationConfig->setCallerKey('Tm8dDO1dPUY4QqRU8r/kAw==');
+$document = new DOMDocument();
+$document->load('scf.config.xml');
+$applicationConfig->setLocalServiceRefConfigs(ServiceReferenceConfigUtil::parserServiceReferenceConfig($document));
 Application::buildSingletonInstance($applicationConfig);
 $refConfig = new Reference();
 $refConfig->setServiceName("servertest1");

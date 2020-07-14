@@ -9,9 +9,11 @@ use com\bj58\zhuanzhuan\zzscf\config\RpcArgs;
 use com\bj58\zhuanzhuan\zzscf\config\ServerNode;
 use com\bj58\zhuanzhuan\zzscf\exception\RpcException;
 use com\bj58\zhuanzhuan\zzscf\exception\RpcExceptionCode;
+use com\bj58\zhuanzhuan\zzscf\protocol\Exception;
 use com\bj58\zhuanzhuan\zzscf\protocol\KeyValuePair;
 use com\bj58\zhuanzhuan\zzscf\protocol\Message;
 use com\bj58\zhuanzhuan\zzscf\protocol\Request;
+use com\bj58\zhuanzhuan\zzscf\protocol\Reset;
 use com\bj58\zhuanzhuan\zzscf\protocol\Response;
 use com\bj58\zhuanzhuan\zzscf\protocol\ScfCodec;
 
@@ -20,8 +22,8 @@ class Invoker
     static array $protocolTypeMap = array('com\bj58\zhuanzhuan\zzscf\protocol\Request' => 'com.bj58.spat.scf.protocol.sdp.RequestProtocol',
         'com\bj58\zhuanzhuan\zzscf\protocol\Response' => 'com.bj58.spat.scf.protocol.sdp.ResponseProtocol',
         'com\bj58\zhuanzhuan\zzscf\protocol\KeyValuePair' => 'com.bj58.spat.scf.protocol.utility.KeyValuePair',
-    'com\bj58\zhuanzhuan\zzscf\protocol\Exception' => 'com.bj58.spat.scf.protocol.sdp.ExceptionProtocol',
-    'com\bj58\zhuanzhuan\zzscf\protocol\Reset' => 'com.bj58.spat.scf.protocol.sdp.ResetProtocol');
+        'com\bj58\zhuanzhuan\zzscf\protocol\Exception' => 'com.bj58.spat.scf.protocol.sdp.ExceptionProtocol',
+        'com\bj58\zhuanzhuan\zzscf\protocol\Reset' => 'com.bj58.spat.scf.protocol.sdp.ResetProtocol');
     private string $interfaceName;
 
     private string $lookup;
@@ -62,42 +64,30 @@ class Invoker
     function invoke(Invocation $invocation)
     {
         $request = $this->buildRequest($invocation);
-
-        list($codec, $data) = $this->encode($request);
+        $codec = new ScfCodec($this->typeMap);
+        $requestBinaryData = $codec->encode(Message::newRequest($request, Application::getCallerKey()));
         static $socket;
+        //连接
         if (!$socket) {
-            $socket = fsockopen($this->serverNode->getHost(), $this->serverNode->getPort(), $errno, $errStr, $this->rpcArgs->getConnectTimeout() / (float)1000);
-            if (!$socket) {
-                throw new RpcException(RpcExceptionCode::$CONNECT_ERROR, 'connect to ' . $this->descString . ' error , errorNO [' . $errno . ']' . ' errorStr ' . $errStr);
-            }
+            $socket = $this->getSocket();
         }
-        if (!fwrite($socket, $data)) {
+        //写入
+        if (!fwrite($socket, $requestBinaryData)) {
             throw new RpcException(RpcExceptionCode::$SEND_DATA_ERROR, 'send data to ' . $this->descString . ' error');
         }
-        stream_set_timeout($socket, 0, $this->rpcArgs->getTimeout() * 1000);
-        $responseHeader = fread($socket, 10);
-        if (!$responseHeader) {
-            if (stream_get_meta_data($socket)['timed_out']) {
-                throw new RpcException(RpcExceptionCode::$REQUEST_TIMEOUT, 'request timeout ' . $this->descString);
-            } else {
-                throw new RpcException(RpcExceptionCode::$RECEIVE_DATA_ERROR, 'receive data error ' . $this->descString);
-            }
-        }
+        //读header
+        $responseHeader = $this->readHeader($socket);
+        //解析长度
         $totalLength = unpack('V', $responseHeader, 6)[1];
-        stream_set_timeout($socket, 0, $this->rpcArgs->getTimeout() * 1000);
-        $responseBody = fread($socket, $totalLength);
-        if (!$responseBody) {
-            if (stream_get_meta_data($socket)['timed_out']) {
-                throw new RpcException(RpcExceptionCode::$REQUEST_TIMEOUT, 'request timeout ' . $this->descString);
-            } else {
-                throw new RpcException(RpcExceptionCode::$RECEIVE_DATA_ERROR, 'receive data error ' . $this->descString);
-            }
-        }
+        //读body
+        $responseBody = $this->readBody($socket, $totalLength);
+        //反序列化
         try {
-            $response = $codec->decode($responseHeader . $responseBody)->getBody();
+            $message = $codec->decode($responseHeader . $responseBody);
         } catch (\Throwable $e) {
             throw new RpcException(RpcExceptionCode::$CLIENT_DECODE_ERROR, 'decode data error from ' . $this->descString);
         }
+        $response = $message->getBody();
         if ($response instanceof Response) {
             if ($response->getException()) {
                 throw $response->getException();
@@ -105,15 +95,13 @@ class Invoker
                 return $response->getResult();
             }
         }
-        if ($response instanceof \stdClass) {
-            if ($response->__type === 'com.bj58.spat.scf.protocol.sdp.ExceptionProtocol') {
-                throw new \Exception($response->errorMsg);
-            }
-            if ($response->__type === 'com.bj58.spat.scf.protocol.sdp.ResetProtocol') {
-                throw new \Exception('server is rebooting');
-            }
+        if ($response instanceof Reset) {
+            throw new RpcException(RpcExceptionCode::$SERVER_IS_SHUTTING_DOWN, 'sever is shutting down, ' . $this->descString);
         }
-        throw new \Exception('unkown response');
+        if ($response instanceof Exception) {
+            throw new RpcException(RpcExceptionCode::$EXCEPTION, $response->getErrorMsg());
+        }
+        throw new RpcException(RpcExceptionCode::$UNDEFINED_RESPONSE, 'undefined response type [' . $message->getType() . ']');
     }
 
     /**
@@ -156,41 +144,15 @@ class Invoker
         return $request;
     }
 
-    /**
-     * @param Request $request
-     * @return array
-     * @throws \Exception
-     */
-    public function encode(Request $request): array
+    private function getSocket()
     {
-        $codec = new ScfCodec($this->typeMap);
-        $request = Message::newRequest($request, Application::getCallerKey());
-        $data = $codec->encode($request);
-        return array($codec, $data);
+        $socket = @fsockopen($this->serverNode->getHost(), $this->serverNode->getPort(), $errno, $errStr, $this->rpcArgs->getConnectTimeout() / (float)1000);
+        if (!$socket) {
+            throw new RpcException(RpcExceptionCode::$CONNECT_ERROR, 'connect to ' . $this->descString . ' error , errorNO [' . $errno . ']' . ' errorStr ' . $errStr);
+        }
+        return $socket;
     }
 
-    /**
-     * @param $data
-     * @param $socket
-     * @throws \Exception
-     */
-    public function write($data, $socket): void
-    {
-        $wroteBytes = 0;
-        $triedTimes = 0;
-        while ($triedTimes < 3 && $wroteBytes < strlen($data)) {
-            $writeResult = socket_write($socket, $data, strlen($data) - $wroteBytes);
-            if ($wroteBytes === false) {
-                throw new \Exception("send data error");
-            } else {
-                $wroteBytes += $writeResult;
-            }
-            $triedTimes++;
-        }
-        if ($triedTimes === 3) {
-            throw new \Exception("send data error, tried " . $triedTimes . ' times');
-        }
-    }
 
     /**
      * @param $socket
@@ -203,6 +165,45 @@ class Invoker
         $responseDataLength = unpack('V', substr($responseData, 6));
         $responseData .= socket_read($socket, $responseDataLength[1] + 10 + 14);
         return $responseData;
+    }
+
+    /**
+     * @param $socket
+     * @return false|string
+     * @throws RpcException
+     */
+    private function readHeader($socket)
+    {
+        stream_set_timeout($socket, 0, $this->rpcArgs->getTimeout() * 1000);
+        $responseHeader = fread($socket, 10);
+        if (!$responseHeader) {
+            if (stream_get_meta_data($socket)['timed_out']) {
+                throw new RpcException(RpcExceptionCode::$REQUEST_TIMEOUT, 'request timeout ' . $this->descString);
+            } else {
+                throw new RpcException(RpcExceptionCode::$RECEIVE_DATA_ERROR, 'receive data error ' . $this->descString);
+            }
+        }
+        return $responseHeader;
+    }
+
+    /**
+     * @param $socket
+     * @param $totalLength
+     * @return false|string
+     * @throws RpcException
+     */
+    private function readBody($socket, $totalLength)
+    {
+        stream_set_timeout($socket, 0, $this->rpcArgs->getTimeout() * 1000);
+        $responseBody = fread($socket, $totalLength);
+        if (!$responseBody) {
+            if (stream_get_meta_data($socket)['timed_out']) {
+                throw new RpcException(RpcExceptionCode::$REQUEST_TIMEOUT, 'request timeout ' . $this->descString);
+            } else {
+                throw new RpcException(RpcExceptionCode::$RECEIVE_DATA_ERROR, 'receive data error ' . $this->descString);
+            }
+        }
+        return $responseBody;
     }
 
 

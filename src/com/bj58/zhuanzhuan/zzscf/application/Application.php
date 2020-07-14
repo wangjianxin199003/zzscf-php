@@ -162,7 +162,9 @@ class Application
         if (!self::$instance instanceof self) {
             self::$instance = new self();
             self::$instance->callerKey = $config->getCallerKey();
-            self::$instance->localReferenceConfigs = $config->getLocalServiceRefConfigs();
+            foreach ($config->getLocalServiceRefConfigs() as $config){
+                self::$instance->localReferenceConfigs[$config->getServiceName()] = $config;
+            }
         } else {
             throw new \Exception("application instance has already bean created");
         }
