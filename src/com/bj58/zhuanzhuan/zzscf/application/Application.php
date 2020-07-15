@@ -69,6 +69,10 @@ class Application
         if (Application::getCallerKey()) {
             self::readConfigFromFile($serviceName);
         }
+        $config = null;
+        if ($cached){
+            $config = $cached['config'];
+        }
         // 如果已经过期从管理平台拉取并写入
         if ((!$cached || (time() - $cached['modifyTime'] > 60)) && Application::getCallerKey()) {
             $result = null;
@@ -84,7 +88,7 @@ class Application
             if ($result) {
                 $jsonResult = json_decode($result);
                 if ($jsonResult->status->code === 0) {
-                    $cached = $jsonResult->result->scfXml;
+                    $config = $jsonResult->result->scfXml;
                     $configDir = self::getRefConfigDir();
                     $filePath = $configDir . '/' . $serviceName;
                     self::writeToCache($serviceName, $result);
@@ -92,9 +96,8 @@ class Application
             }
         }
         // 解析
-        if ($cached) {
-            var_dump($cached);
-            return ReferenceConfigUtil::parseSingleFromSimpleXmlString($cached['config']);
+        if ($config) {
+            return ReferenceConfigUtil::parseSingleFromSimpleXmlString($config);
         }
         // 本地配置
         return Application::$instance->localReferenceConfigs[$serviceName];
