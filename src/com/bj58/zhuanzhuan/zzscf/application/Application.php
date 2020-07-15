@@ -89,8 +89,6 @@ class Application
                 $jsonResult = json_decode($result);
                 if ($jsonResult->status->code === 0) {
                     $config = $jsonResult->result->scfXml;
-                    $configDir = self::getRefConfigDir();
-                    $filePath = $configDir . '/' . $serviceName;
                     self::writeToCache($serviceName, $result);
                 }
             }
@@ -98,9 +96,14 @@ class Application
         // 解析
         if ($config) {
             return ReferenceConfigUtil::parseSingleFromSimpleXmlString($config);
+        }else{
+            // 本地配置
+            if (array_key_exists(Application::$instance->localReferenceConfigs, $serviceName)) {
+                return Application::$instance->localReferenceConfigs[$serviceName];
+            }else{
+                throw new \Exception('can not find config of service [' . $serviceName . '] from neither service manger nor local');
+            }
         }
-        // 本地配置
-        return Application::$instance->localReferenceConfigs[$serviceName];
     }
 
     /**
