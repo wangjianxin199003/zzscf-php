@@ -7,6 +7,7 @@ namespace com\bj58\zhuanzhuan\zzscf\application;
 use com\bj58\zhuanzhuan\zzscf\config\ApplicationConfig;
 use com\bj58\zhuanzhuan\zzscf\config\ReferenceConfig;
 use com\bj58\zhuanzhuan\zzscf\log\DoNothingLogger;
+use com\bj58\zhuanzhuan\zzscf\log\Logger;
 use com\bj58\zhuanzhuan\zzscf\log\PrintLogger;
 use com\bj58\zhuanzhuan\zzscf\util\ReferenceConfigUtil;
 
@@ -86,7 +87,7 @@ class Application
                     $cached = $jsonResult->result->scfXml;
                     $configDir = self::getRefConfigDir();
                     $filePath = $configDir . '/' . $serviceName;
-                    self::writeToFile($configDir, $filePath, $result);
+                    self::writeToCache($serviceName, $result);
                 }
             }
         }
@@ -103,8 +104,10 @@ class Application
      * @param $fileContent
      * @throws \Exception
      */
-    private static function writeToFile($configDir, $filePath, $fileContent): void
+    private static function writeToCache($serviceName, $fileContent): void
     {
+        $configDir = self::getRefConfigDir();
+        $filePath = $filePath = $configDir . '/' . $serviceName;
         if (!is_dir($configDir)) {
             @mkdir($configDir, null, true);
         };
@@ -113,6 +116,7 @@ class Application
             if (flock($fd, LOCK_EX | LOCK_NB)) {
                 try {
                     fwrite($fd, $fileContent);
+                    Application::logger()->info("[ARCH_SCF_writeConfigToCache] serviceName=" . $serviceName . ' content=' . $fileContent);
                 } finally {
                     flock($fd, LOCK_UN);
                 }
@@ -200,7 +204,7 @@ class Application
         }
     }
 
-    public static function logger()
+    public static function logger(): ?Logger
     {
         if (!Application::$instance) {
             throw new \Exception("application instance has not bean created");
@@ -208,7 +212,7 @@ class Application
         return Application::$instance->logger;
     }
 
-    public static function getAppName(){
+    public static function getAppName(): ?string{
         if (!Application::$instance) {
             throw new \Exception("application instance has not bean created");
         }
