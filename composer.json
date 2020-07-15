@@ -7,5 +7,7 @@
     "psr-4": {
       "": "src"
     }
-  }
+  },
+  "version": "1.2.0-SNAPSHOT",
+  "homepage": "http://dashen.zhuanspirit.com/pages/viewpage.action?pageId=10487081"
 }
