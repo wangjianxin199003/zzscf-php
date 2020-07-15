@@ -6,7 +6,7 @@ namespace com\bj58\zhuanzhuan\zzscf\invoke;
 
 class Invocation
 {
-    private  $methodName;
+    private $methodName;
     private $args;
     private $parameterTypes;
 
@@ -75,6 +75,9 @@ class Invocation
     {
         $this->parameterTypes = $parameterTypes;
     }
+
+
+
 
 
 }

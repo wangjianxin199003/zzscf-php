@@ -11,9 +11,9 @@ use com\bj58\zhuanzhuan\zzscf\invoke\Invocation;
 
 class Proxy
 {
-    private  $invokers;
+    private $invokers;
 
-    private  $contract;
+    private $contract;
 
     /**
      * Proxy constructor.
@@ -22,6 +22,9 @@ class Proxy
      */
     public function __construct(array $invokers, Contract $contract)
     {
+        if (count($invokers) === 0) {
+            throw new \Exception('argument invokers can not be empty');
+        }
         $this->invokers = $invokers;
         $this->contract = $contract;
     }
@@ -43,13 +46,13 @@ class Proxy
             } catch (RpcException $e) {
                 $exception = $e;
                 $code = $e->getErrorCode();
-                if ($code !== RpcExceptionCode::$CONNECT_ERROR && $code !== RpcExceptionCode::$SERVER_IS_SHUTTING_DOWN) {
+                if ($code !== RpcExceptionCode::$CONNECT_ERROR && $code !== RpcExceptionCode::$SERVER_IS_SHUTTING_DOWN && $code != RpcExceptionCode::$SEND_DATA_ERROR) {
                     throw $e;
                 }
             }
             $index = ($index + 1) % count($this->invokers);
         } while ($index !== $initIndex);
-        throw $exception;
+        throw new RpcException(RpcExceptionCode::$NO_AVAILABLE_SERVER, $this->invokers[0]->getServiceName() . 'has no available server', $exception);
     }
 
 }

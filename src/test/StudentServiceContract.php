@@ -8,9 +8,9 @@ use com\bj58\zhuanzhuan\zzscf\contract\AbstractContract;
 
 class StudentServiceContract extends AbstractContract
 {
-    private array $parameterTypes = array("getStudent" => array('long', 'String', 'int',
-    ), "saveStudent"=>array('Student'));
-    private array $typeMap = array('test\Student' => 'com.bj58.zhuanzhuan.wjx.scf.server.test1.entity.Studen');
+    private $parameterTypes = array("getStudent" => array('long', 'String', 'int',
+    ), "saveStudent" => array('Student'));
+    private $typeMap = array('test\Student' => 'com.bj58.zhuanzhuan.wjx.scf.server.test1.entity.Student');
 
     function getRemoteInterfaceName(): string
     {

@@ -19,24 +19,24 @@ use com\bj58\zhuanzhuan\zzscf\protocol\ScfCodec;
 
 class Invoker
 {
-    static  $protocolTypeMap = array('com\bj58\zhuanzhuan\zzscf\protocol\Request' => 'com.bj58.spat.scf.protocol.sdp.RequestProtocol',
+    static $protocolTypeMap = array('com\bj58\zhuanzhuan\zzscf\protocol\Request' => 'com.bj58.spat.scf.protocol.sdp.RequestProtocol',
         'com\bj58\zhuanzhuan\zzscf\protocol\Response' => 'com.bj58.spat.scf.protocol.sdp.ResponseProtocol',
         'com\bj58\zhuanzhuan\zzscf\protocol\KeyValuePair' => 'com.bj58.spat.scf.protocol.utility.KeyValuePair',
         'com\bj58\zhuanzhuan\zzscf\protocol\Exception' => 'com.bj58.spat.scf.protocol.sdp.ExceptionProtocol',
         'com\bj58\zhuanzhuan\zzscf\protocol\Reset' => 'com.bj58.spat.scf.protocol.sdp.ResetProtocol');
-    private  $interfaceName;
+    private $interfaceName;
 
     private $lookup;
 
-    private  $typeMap;
+    private $typeMap;
 
     private $serverNode;
 
     private $rpcArgs;
 
-    private  $serviceName;
+    private $serviceName;
 
-    private  $descString;
+    private $descString;
 
 
     /**
@@ -65,7 +65,13 @@ class Invoker
     {
         $request = $this->buildRequest($invocation);
         $codec = new ScfCodec($this->typeMap);
-        $requestBinaryData = $codec->encode(Message::newRequest($request, Application::getCallerKey()));
+
+        $requestBinaryData = null;
+        try {
+            $requestBinaryData = $codec->encode(Message::newRequest($request, Application::getCallerKey()));
+        } catch (\Throwable $e) {
+            throw new RpcException(RpcExceptionCode::$CLIENT_ENCODE_ERROR, '', $e);
+        }
         static $socket;
         //连接
         if (!$socket) {
@@ -119,6 +125,15 @@ class Invoker
     {
         return $this->lookup;
     }
+
+    /**
+     * @return string
+     */
+    public function getServiceName(): string
+    {
+        return $this->serviceName;
+    }
+
 
     /**
      * @param Invocation $invocation

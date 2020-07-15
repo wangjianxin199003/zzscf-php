@@ -6,9 +6,9 @@ namespace test;
 
 class Student
 {
-    private ?int $id = 0;
-    private ?string $name;
-    private ?int $age = 0;
+    private  $id = 0;
+    private  $name;
+    private  $age = 0;
 
     /**
      * @return mixed

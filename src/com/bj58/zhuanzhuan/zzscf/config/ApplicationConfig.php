@@ -4,13 +4,16 @@
 namespace com\bj58\zhuanzhuan\zzscf\config;
 
 
+use com\bj58\zhuanzhuan\zzscf\log\Logger;
+
 class ApplicationConfig
 {
-    static protected $instance;
 
-    private  $callerKey = '';
+    private $callerKey = '';
 
-    private  $localServiceRefConfigs = array();
+    private $localServiceRefConfigs = array();
+
+    private $logger;
 
     /**
      * @return string
@@ -43,5 +46,23 @@ class ApplicationConfig
     {
         $this->localServiceRefConfigs = $localServiceRefConfigs;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    /**
+     * @param mixed $logger
+     */
+    public function setLogger($logger): Logger
+    {
+        $this->logger = $logger;
+    }
+
+
 }
 

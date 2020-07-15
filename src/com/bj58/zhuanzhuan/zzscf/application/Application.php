@@ -6,21 +6,29 @@ namespace com\bj58\zhuanzhuan\zzscf\application;
 
 use com\bj58\zhuanzhuan\zzscf\config\ApplicationConfig;
 use com\bj58\zhuanzhuan\zzscf\config\ReferenceConfig;
+use com\bj58\zhuanzhuan\zzscf\log\DoNothingLogger;
+use com\bj58\zhuanzhuan\zzscf\log\PrintLogger;
 use com\bj58\zhuanzhuan\zzscf\util\ReferenceConfigUtil;
 
 class Application
 {
-    private static  $instance = null;
+    private static $instance = null;
 
-    private  $callerKey = '';
+    private $callerKey = '';
 
     protected $localReferenceConfigs = array();
+
+    private $logger;
 
     /**
      * Application constructor.
      */
     private function __construct()
     {
+    }
+
+    public static function getInstance(){
+        return self::$instance;
     }
 
 
@@ -51,28 +59,38 @@ class Application
         if (!Application::$instance) {
             throw new \Exception("application instance has not bean created");
         }
-        $configDir = self::getRefConfigDir();
-        $filePath = $configDir . '/' . $serviceName;
+
         // 从本地缓存读取
-        $configXmlString = self::readConfigFromFile($filePath);
-        // 从管理平台拉取并写入
-        if (!$configXmlString && Application::getCallerKey()) {
-            $curl = curl_init();
-            $url = 'http://api.srvmgr.zhuaninc.com/sdk/getNewConfig?callerKey=' . urlencode(Application::getCallerKey()) . '&serviceName=' . $serviceName . '&clientConfigTime=0';
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, $url);
-            $result = curl_exec($curl);
+        $cached = null;
+        if (Application::getCallerKey()) {
+            self::readConfigFromFile($serviceName);
+        }
+        // 如果已经过期从管理平台拉取并写入
+        if ((!$cached || (time() - $cached['modifyTime'] > 60)) && Application::getCallerKey()) {
+            $result = null;
+            try {
+                $curl = curl_init();
+                $url = 'http://api.srvmgr.zhuaninc.com/sdk/getNewConfig?callerKey=' . urlencode(Application::getCallerKey()) . '&serviceName=' . $serviceName . '&clientConfigTime=0';
+                curl_setopt($curl, CURLOPT_URL, $url);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, $url);
+                $result = curl_exec($curl);
+            } catch (\Throwable $e) {
+                self::logger()->warn('get config from service manager error, service name [' . $serviceName . ']', $e);
+            }
             if ($result) {
                 $jsonResult = json_decode($result);
                 if ($jsonResult->status->code === 0) {
-                    $configXmlString = $jsonResult->result->scfXml;
+                    $cached = $jsonResult->result->scfXml;
+                    $configDir = self::getRefConfigDir();
+                    $filePath = $configDir . '/' . $serviceName;
                     self::writeToFile($configDir, $filePath, $result);
                 }
             }
         }
         // 解析
-        if ($configXmlString) {
-            return ReferenceConfigUtil::parseSingleFromSimpleXmlString($configXmlString);
+        if ($cached) {
+            var_dump($cached);
+            return ReferenceConfigUtil::parseSingleFromSimpleXmlString($cached['config']);
         }
         // 本地配置
         return Application::$instance->localReferenceConfigs[$serviceName];
@@ -123,28 +141,29 @@ class Application
      * @param string $filePath
      * @return mixed
      */
-    private static function readConfigFromFile(string $filePath)
+    private static function readConfigFromFile(string $serviceName)
     {
+        $configDir = self::getRefConfigDir();
+        $filePath = $configDir . '/' . $serviceName;
         if (file_exists($filePath)) {
             $modifyTime = filemtime($filePath);
             // 每分钟检测一次
-            if (time() - $modifyTime < 60) {
-                $fd = fopen($filePath, 'r');
-                if ($fd) {
-                    if (flock($fd, LOCK_SH)) {
-                        try {
-                            $contents = file_get_contents($filePath);
-                            $jsonResult = json_decode($contents);
-                            if ($jsonResult->status->code === 0) {
-                                return $jsonResult->result->scfXml;
-                            }
-                        } finally {
-                            flock($fd, LOCK_UN);
+            $fd = fopen($filePath, 'r');
+            if ($fd) {
+                if (flock($fd, LOCK_SH)) {
+                    try {
+                        $contents = file_get_contents($filePath);
+                        $jsonResult = json_decode($contents);
+                        if ($jsonResult->status->code === 0) {
+                            return array("config" => $jsonResult->result->scfXml, "modifyTime" => $modifyTime);
                         }
+                    } finally {
+                        flock($fd, LOCK_UN);
                     }
                 }
             }
-
+        } else {
+            Application::logger()->info('ss');
         }
         return false;
     }
@@ -162,11 +181,24 @@ class Application
         if (!self::$instance instanceof self) {
             self::$instance = new self();
             self::$instance->callerKey = $config->getCallerKey();
-            foreach ($config->getLocalServiceRefConfigs() as $config){
+            if ($config->getLogger()) {
+                self::$instance->logger = $config->getLogger();
+            } else {
+                self::$instance->logger = new DoNothingLogger();
+            }
+            foreach ($config->getLocalServiceRefConfigs() as $config) {
                 self::$instance->localReferenceConfigs[$config->getServiceName()] = $config;
             }
         } else {
             throw new \Exception("application instance has already bean created");
         }
+    }
+
+    public static function logger()
+    {
+        if (!Application::$instance) {
+            throw new \Exception("application instance has not bean created");
+        }
+        return Application::$instance->logger;
     }
 }
