@@ -4,7 +4,7 @@
 namespace test;
 
 
-class SleepService extends AbstractTestService
+class SleepService extends MyApplicationService
 {
     private $ref;
 

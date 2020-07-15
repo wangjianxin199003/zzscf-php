@@ -9,7 +9,7 @@ use com\bj58\zhuanzhuan\zzscf\contract\AbstractService;
 use com\bj58\zhuanzhuan\zzscf\contract\Contract;
 use com\bj58\zhuanzhuan\zzscf\util\ReferenceConfigUtil;
 
-class AbstractTestService extends AbstractService
+class MyApplicationService extends AbstractService
 {
 
     /**
