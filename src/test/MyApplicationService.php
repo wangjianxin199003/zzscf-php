@@ -22,8 +22,9 @@ class MyApplicationService extends AbstractService
             $applicationConfig = new ApplicationConfig();
             $applicationConfig->setAppName("demophp");
             $document = new \DOMDocument();
-            $document->load('scf.config.xml');
-            $applicationConfig->setLocalServiceRefConfigs(ReferenceConfigUtil::parserMultiFromXmlDOMDocument($document));
+//            $document->load('scf.config.xml');
+//            $applicationConfig->setLocalServiceRefConfigs(ReferenceConfigUtil::parserMultiFromXmlDOMDocument($document));
+            $applicationConfig->setCallerKey("Tm8dDO1dPUY4QqRU8r/kAw==");
             parent::__construct($serviceName, $contract, $applicationConfig);
         }
     }

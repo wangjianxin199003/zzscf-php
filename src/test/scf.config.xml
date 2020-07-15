@@ -5,7 +5,7 @@
 
     <zzscf:referenceConfig serviceName="servertest1">
          <zzscf:nodes>
-             <zzscf:node host="127.0.0.1" port="16546" version="1.1.18-SNAPSHOT" idc="bjm6"  systemEnv="testserver"/>
+             <zzscf:node host="192.168.188.50" port="16546" version="1.1.18-SNAPSHOT" idc="bjm6"  systemEnv="testserver"/>
         </zzscf:nodes>
     </zzscf:referenceConfig>
 
