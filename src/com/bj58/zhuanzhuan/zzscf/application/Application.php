@@ -20,6 +20,8 @@ class Application
 
     private $logger;
 
+    private $appName;
+
     /**
      * Application constructor.
      */
@@ -27,7 +29,8 @@ class Application
     {
     }
 
-    public static function getInstance(){
+    public static function getInstance()
+    {
         return self::$instance;
     }
 
@@ -186,6 +189,9 @@ class Application
             } else {
                 self::$instance->logger = new DoNothingLogger();
             }
+            if ($config->getAppName()) {
+                self::$instance->appName = $config->getAppName();
+            }
             foreach ($config->getLocalServiceRefConfigs() as $config) {
                 self::$instance->localReferenceConfigs[$config->getServiceName()] = $config;
             }
@@ -200,5 +206,12 @@ class Application
             throw new \Exception("application instance has not bean created");
         }
         return Application::$instance->logger;
+    }
+
+    public static function getAppName(){
+        if (!Application::$instance) {
+            throw new \Exception("application instance has not bean created");
+        }
+        return Application::$instance->appName;
     }
 }

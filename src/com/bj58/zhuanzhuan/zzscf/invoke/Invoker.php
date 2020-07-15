@@ -155,6 +155,9 @@ class Invoker
             $kv->setValue($value);
             $kvList[] = $kv;
         }
+        if(Application::getAppName()){
+            $request->setAttachments(array('application.name'=>Application::getAppName()));
+        }
         $request->setParaKVList($kvList);
         return $request;
     }

@@ -15,6 +15,8 @@ class ApplicationConfig
 
     private $logger;
 
+    private $appName;
+
     /**
      * @return string
      */
@@ -58,10 +60,28 @@ class ApplicationConfig
     /**
      * @param mixed $logger
      */
-    public function setLogger($logger): Logger
+    public function setLogger(Logger $logger)
     {
         $this->logger = $logger;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAppName()
+    {
+        return $this->appName;
+    }
+
+    /**
+     * @param mixed $appName
+     */
+    public function setAppName(string $appName): void
+    {
+        $this->appName = $appName;
+    }
+
+
 
 
 }

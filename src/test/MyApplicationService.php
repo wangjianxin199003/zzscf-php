@@ -17,10 +17,14 @@ class MyApplicationService extends AbstractService
      */
     public function __construct(string $serviceName, Contract $contract)
     {
-        $applicationConfig = new ApplicationConfig();
-        $document = new \DOMDocument();
-        $document->load('scf.config.xml');
-        $applicationConfig->setLocalServiceRefConfigs(ReferenceConfigUtil::parserMultiFromXmlDOMDocument($document));
-        parent::__construct($serviceName, $contract, $applicationConfig);
+        static $applicationConfig;
+        if (!$applicationConfig){
+            $applicationConfig = new ApplicationConfig();
+            $applicationConfig->setAppName("demophp");
+            $document = new \DOMDocument();
+            $document->load('scf.config.xml');
+            $applicationConfig->setLocalServiceRefConfigs(ReferenceConfigUtil::parserMultiFromXmlDOMDocument($document));
+            parent::__construct($serviceName, $contract, $applicationConfig);
+        }
     }
 }

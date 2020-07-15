@@ -74,13 +74,11 @@ class HessianUtils{
 	 * @return bool
 	 */
 	public static function isListFormula($arr){
-		$n = count($arr);
-		$sum = (0*$n) + ( ($n*($n-1)*1)/2 );
-		$keys = array_keys($arr);
-		$keysum = array_sum($keys);
-		return $sum === $keysum;
+        return array_keys($arr) === range(0, count($arr) - 1);
+
 	}
-		
+
+
 	/**
 	 * Resolves if the machine arquitecture is big or little endian by comparing two binary packed
 	 * values
