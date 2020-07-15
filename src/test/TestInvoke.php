@@ -17,7 +17,7 @@ $student = new Student();
 $student->setId(2);
 $student->setName("zhang");
 $student->setAge(13);
-$student->setMap(array(1 => 'abc'));
+$student->setMap(array(0 => 'abc', null=>null));
 print $studentService->saveStudent($student);
 
 
