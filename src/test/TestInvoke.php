@@ -4,6 +4,7 @@
 use test\SleepService;
 use test\Student;
 use test\StudentService;
+use test\Teacher;
 
 require '..\..\vendor\autoload.php';
 
@@ -18,6 +19,11 @@ $student->setId(2);
 $student->setName("zhang");
 $student->setAge(13);
 $student->setMap(array(0 => 'abc', null=>null));
+$teacher1 = new Teacher();
+$teacher1->setName("li");
+$teacher2 = new Teacher();
+$teacher2->setName("zhao");
+$student->setTeachers(array($teacher1, $teacher2));
 print $studentService->saveStudent($student);
 
 

@@ -10,6 +10,7 @@ class Student
     private  $name;
     private  $age = 0;
     private $map;
+    private $teachers;
 
     /**
      * @return mixed
@@ -73,6 +74,22 @@ class Student
     public function setMap($map): void
     {
         $this->map = $map;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTeachers()
+    {
+        return $this->teachers;
+    }
+
+    /**
+     * @param mixed $teachers
+     */
+    public function setTeachers($teachers): void
+    {
+        $this->teachers = $teachers;
     }
 
 
