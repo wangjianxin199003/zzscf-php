@@ -66,12 +66,7 @@ class Invoker
         $request = $this->buildRequest($invocation);
         $codec = new ScfCodec($this->typeMap);
 
-        $requestBinaryData = null;
-        try {
-            $requestBinaryData = $codec->encode(Message::newRequest($request, Application::getCallerKey()));
-        } catch (\Throwable $e) {
-            throw new RpcException(RpcExceptionCode::$CLIENT_ENCODE_ERROR, '', $e);
-        }
+        $requestBinaryData = $this->encodeRequest($codec, $request);
         static $socket;
         //连接
         if (!$socket) {
@@ -81,18 +76,10 @@ class Invoker
         if (!fwrite($socket, $requestBinaryData)) {
             throw new RpcException(RpcExceptionCode::$SEND_DATA_ERROR, 'send data to ' . $this->descString . ' error');
         }
-        //读header
-        $responseHeader = $this->readHeader($socket);
-        //解析长度
-        $totalLength = unpack('V', $responseHeader, 6)[1];
-        //读body
-        $responseBody = $this->readBody($socket, $totalLength);
+        $responseData = $this->readResponseData($socket);
         //反序列化
-        try {
-            $message = $codec->decode($responseHeader . $responseBody);
-        } catch (\Throwable $e) {
-            throw new RpcException(RpcExceptionCode::$CLIENT_DECODE_ERROR, 'decode data error from ' . $this->descString, $e);
-        }
+        $message = $this->decodeResponse($codec, $responseData);
+
         $response = $message->getBody();
         if ($response instanceof Response) {
             if ($response->getException()) {
@@ -222,6 +209,55 @@ class Invoker
             }
         }
         return $responseBody;
+    }
+
+    /**
+     * @param ScfCodec $codec
+     * @param Request $request
+     * @return string
+     * @throws RpcException
+     */
+    private function encodeRequest(ScfCodec $codec, Request $request): string
+    {
+        try {
+            $requestBinaryData = $codec->encode(Message::newRequest($request, Application::getCallerKey()));
+        } catch (\Throwable $e) {
+            throw new RpcException(RpcExceptionCode::$CLIENT_ENCODE_ERROR, '', $e);
+        }
+        return $requestBinaryData;
+    }
+
+    /**
+     * @param ScfCodec $codec
+     * @param string $responseData
+     * @return Message
+     * @throws RpcException
+     */
+    private function decodeResponse(ScfCodec $codec, string $responseData): Message
+    {
+        try {
+            $message = $codec->decode($responseData);
+        } catch (\Throwable $e) {
+            throw new RpcException(RpcExceptionCode::$CLIENT_DECODE_ERROR, 'decode data error from ' . $this->descString, $e);
+        }
+        return $message;
+    }
+
+    /**
+     * @param $socket
+     * @return string
+     * @throws RpcException
+     */
+    private function readResponseData($socket): string
+    {
+//读header
+        $responseHeader = $this->readHeader($socket);
+        //解析长度
+        $totalLength = unpack('V', $responseHeader, 6)[1];
+        //读body
+        $responseBody = $this->readBody($socket, $totalLength);
+        $responseData = $responseHeader . $responseBody;
+        return $responseData;
     }
 
 

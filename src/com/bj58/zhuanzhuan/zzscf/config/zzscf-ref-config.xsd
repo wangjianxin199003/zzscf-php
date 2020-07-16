@@ -18,9 +18,6 @@
     </xsd:complexType>
 
     <xsd:complexType name="rpcArgsType">
-        <xsd:sequence>
-            <xsd:element name="method" type="zzscf:method" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
         <xsd:attribute name="timeout" type="xsd:positiveInteger" use="optional"/>
         <xsd:attribute name="connectTimeout" type="xsd:positiveInteger" use="optional"/>
     </xsd:complexType>
