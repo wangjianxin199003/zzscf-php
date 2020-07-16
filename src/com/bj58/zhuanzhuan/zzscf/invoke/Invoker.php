@@ -16,6 +16,8 @@ use com\bj58\zhuanzhuan\zzscf\protocol\Request;
 use com\bj58\zhuanzhuan\zzscf\protocol\Reset;
 use com\bj58\zhuanzhuan\zzscf\protocol\Response;
 use com\bj58\zhuanzhuan\zzscf\protocol\ScfCodec;
+use com\bj58\zhuanzhuan\zzscf\trace\RadarSpanContext;
+use com\bj58\zhuanzhuan\zzscf\util\TraceUtils;
 
 class Invoker
 {
@@ -142,8 +144,11 @@ class Invoker
             $kv->setValue($value);
             $kvList[] = $kv;
         }
-        if(Application::getAppName()){
-            $request->setAttachments(array('application.name'=>Application::getAppName()));
+        if (Application::getAppName()) {
+            $spanContext = new RadarSpanContext();
+            TraceUtils::$context = $spanContext;
+            $request->setAttachments(array('application.name' => Application::getAppName(),
+                '_RADAR_SPAN_CONTEXT' => $spanContext->getTraceId() . ':::' . $spanContext->getSampleTTL()));
         }
         $request->setParaKVList($kvList);
         return $request;
