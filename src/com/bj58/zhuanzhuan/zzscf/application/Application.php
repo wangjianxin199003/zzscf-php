@@ -8,7 +8,6 @@ use com\bj58\zhuanzhuan\zzscf\config\ApplicationConfig;
 use com\bj58\zhuanzhuan\zzscf\config\ReferenceConfig;
 use com\bj58\zhuanzhuan\zzscf\log\DoNothingLogger;
 use com\bj58\zhuanzhuan\zzscf\log\Logger;
-use com\bj58\zhuanzhuan\zzscf\log\PrintLogger;
 use com\bj58\zhuanzhuan\zzscf\util\ReferenceConfigUtil;
 
 class Application
@@ -41,29 +40,19 @@ class Application
      */
     public static function getCallerKey(): ?string
     {
-        if (!Application::$instance) {
-            throw new \Exception("application instance has not bean created");
-        }
+        self::verify();
         return Application::$instance->callerKey;
     }
 
     public static function getReferenceConfigs(): ?array
     {
-        if (!Application::$instance) {
-            throw new \Exception("application instance has not bean created");
-        }
+        self::verify();
         return Application::$instance->localReferenceConfigs;
     }
 
     public static function getReferenceConfig(string $serviceName): ?ReferenceConfig
     {
-        if (!Application::$instance) {
-            throw new \Exception("application instance has not bean created");
-        }
-        if (!Application::$instance) {
-            throw new \Exception("application instance has not bean created");
-        }
-
+        self::verify();
         // 从本地缓存读取
         $cached = null;
         if (Application::getCallerKey()) {
@@ -83,7 +72,7 @@ class Application
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, $url);
                 $result = curl_exec($curl);
             } catch (\Throwable $e) {
-                self::logger()->warn('get config from service manager error, service name [' . $serviceName . ']', $e);
+                self::logger()->warnException('failed to get reference configuration from the registry, service name [' . $serviceName . ']', $e);
             }
             if ($result) {
                 $jsonResult = json_decode($result);
@@ -98,10 +87,10 @@ class Application
             return ReferenceConfigUtil::parseSingleFromSimpleXmlString($config);
         }else{
             // 本地配置
-            if (array_key_exists(Application::$instance->localReferenceConfigs, $serviceName)) {
+            if (array_key_exists($serviceName, Application::$instance->localReferenceConfigs)) {
                 return Application::$instance->localReferenceConfigs[$serviceName];
             }else{
-                throw new \Exception('can not find config of service [' . $serviceName . '] from neither service manger nor local');
+                throw new \Exception('reference configuration can neither be found from the registry nor locally, service name [' . $serviceName . ']');
             }
         }
     }
@@ -181,6 +170,13 @@ class Application
         return false;
     }
 
+    private static function verify(): void
+    {
+        if (!Application::$instance) {
+            throw new \Exception("application instance has not bean created");
+        }
+    }
+
     /**
      * @param string $callerKey
      */
@@ -212,16 +208,12 @@ class Application
 
     public static function logger(): ?Logger
     {
-        if (!Application::$instance) {
-            throw new \Exception("application instance has not bean created");
-        }
+        self::verify();
         return Application::$instance->logger;
     }
 
     public static function getAppName(): ?string{
-        if (!Application::$instance) {
-            throw new \Exception("application instance has not bean created");
-        }
+        self::verify();
         return Application::$instance->appName;
     }
 }
