@@ -8,8 +8,13 @@ class TraceUtils
 {
     static $context;
 
-    public static function getTraceId(){
-        return TraceUtils::$context->getTraceId();
+    public static function getTraceId(): string
+    {
+        if (TraceUtils::$context) {
+            return TraceUtils::$context->getTraceId();
+        } else {
+            return '';
+        }
     }
 
 }
