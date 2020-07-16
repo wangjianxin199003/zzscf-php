@@ -41,16 +41,13 @@
 
     <xsd:simpleType name="serializationType">
         <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="SCF"/>
-            <xsd:enumeration value="SCFV4"/>
             <xsd:enumeration value="hessian2"/>
         </xsd:restriction>
     </xsd:simpleType>
 
     <xsd:simpleType name="protocolType">
         <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="V1"/>
-            <xsd:enumeration value="V2"/>
+            <xsd:enumeration value="v2"/>
         </xsd:restriction>
     </xsd:simpleType>
 
