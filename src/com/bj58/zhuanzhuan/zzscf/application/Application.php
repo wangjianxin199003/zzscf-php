@@ -104,9 +104,9 @@ class Application
             @mkdir($configDir, null, true);
         };
         if (!file_put_contents($filePath, $fileContent)) {
-            Application::logger()->info("[ARCH_SCF_writeRefConfigToCacheFailed] serviceName [" . $serviceName . '] content [' . $fileContent.']');
-        }else{
-            Application::logger()->info("[ARCH_SCF_writeRefConfigToCacheSuccess] serviceName [" . $serviceName . '] content [' . $fileContent.']');
+            Application::logger()->info("[ARCH_SCF_writeRefConfigToCacheFailed] serviceName [" . $serviceName . '] content [' . $fileContent . ']');
+        } else {
+            Application::logger()->info("[ARCH_SCF_writeRefConfigToCacheSuccess] serviceName [" . $serviceName . '] content [' . $fileContent . ']');
         }
 
     }
@@ -141,23 +141,11 @@ class Application
         $filePath = $configDir . '/' . $serviceName;
         if (file_exists($filePath)) {
             $modifyTime = filemtime($filePath);
-            // 每分钟检测一次
-            $fd = fopen($filePath, 'r');
-            if ($fd) {
-                if (flock($fd, LOCK_SH)) {
-                    try {
-                        $contents = file_get_contents($filePath);
-                        $jsonResult = json_decode($contents);
-                        if ($jsonResult->status->code === 0) {
-                            return array("config" => $jsonResult->result->scfXml, "modifyTime" => $modifyTime);
-                        }
-                    } finally {
-                        flock($fd, LOCK_UN);
-                    }
-                }
+            $contents = file_get_contents($filePath);
+            $jsonResult = json_decode($contents);
+            if ($jsonResult->status->code === 0) {
+                return array("config" => $jsonResult->result->scfXml, "modifyTime" => $modifyTime);
             }
-        } else {
-            Application::logger()->info('ss');
         }
         return false;
     }
