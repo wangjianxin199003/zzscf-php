@@ -50,6 +50,19 @@ class Application
         return Application::$instance->localReferenceConfigs;
     }
 
+
+    public static function logger(): ?Logger
+    {
+        self::verify();
+        return Application::$instance->logger;
+    }
+
+    public static function getAppName(): ?string
+    {
+        self::verify();
+        return Application::$instance->appName;
+    }
+
     public static function getReferenceConfig(string $serviceName): ?ReferenceConfig
     {
         self::verify();
@@ -59,37 +72,21 @@ class Application
             self::readConfigFromFile($serviceName);
         }
         $config = null;
-        if ($cached){
+        if ($cached) {
             $config = $cached['config'];
         }
         // 如果已经过期从管理平台拉取并写入
         if ((!$cached || (time() - $cached['modifyTime'] > 60)) && Application::getCallerKey()) {
-            $result = null;
-            try {
-                $curl = curl_init();
-                $url = 'http://api.srvmgr.zhuaninc.com/sdk/getNewConfig?callerKey=' . urlencode(Application::getCallerKey()) . '&serviceName=' . $serviceName . '&clientConfigTime=0';
-                curl_setopt($curl, CURLOPT_URL, $url);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, $url);
-                $result = curl_exec($curl);
-            } catch (\Throwable $e) {
-                self::logger()->warnException('failed to get reference configuration from the registry, service name [' . $serviceName . ']', $e);
-            }
-            if ($result) {
-                $jsonResult = json_decode($result);
-                if ($jsonResult->status->code === 0) {
-                    $config = $jsonResult->result->scfXml;
-                    self::writeToCache($serviceName, $result);
-                }
-            }
+            $config = self::getRefConfigFromRegistry($serviceName);
         }
         // 解析
         if ($config) {
             return ReferenceConfigUtil::parseSingleFromSimpleXmlString($config);
-        }else{
+        } else {
             // 本地配置
             if (array_key_exists($serviceName, Application::$instance->localReferenceConfigs)) {
                 return Application::$instance->localReferenceConfigs[$serviceName];
-            }else{
+            } else {
                 throw new \Exception('reference configuration can neither be found from the registry nor locally, service name [' . $serviceName . ']');
             }
         }
@@ -106,17 +103,12 @@ class Application
         if (!is_dir($configDir)) {
             @mkdir($configDir, null, true);
         };
-        $fd = fopen($filePath, 'w');
-        if ($fd) {
-            if (flock($fd, LOCK_EX | LOCK_NB)) {
-                try {
-                    fwrite($fd, $fileContent);
-                    Application::logger()->info("[ARCH_SCF_writeConfigToCache] serviceName=" . $serviceName . ' content=' . $fileContent);
-                } finally {
-                    flock($fd, LOCK_UN);
-                }
-            }
+        if (!file_put_contents($filePath, $fileContent)) {
+            Application::logger()->info("[ARCH_SCF_writeRefConfigToCacheFailed] serviceName [" . $serviceName . '] content [' . $fileContent.']');
+        }else{
+            Application::logger()->info("[ARCH_SCF_writeRefConfigToCacheSuccess] serviceName [" . $serviceName . '] content [' . $fileContent.']');
         }
+
     }
 
     /**
@@ -178,6 +170,35 @@ class Application
     }
 
     /**
+     * @param string $serviceName
+     * @return mixed
+     * @throws \Exception
+     */
+    private static function getRefConfigFromRegistry(string $serviceName)
+    {
+        $result = null;
+        try {
+            $curl = curl_init();
+            $url = 'http://api.srvmgr.zhuaninc.com/sdk/getNewConfig?callerKey=' . urlencode(Application::getCallerKey()) . '&serviceName=' . $serviceName . '&clientConfigTime=0';
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, $url);
+            curl_setopt($curl, CURLOPT_NOSIGNAL, 1);
+            curl_setopt($curl, CURLOPT_TIMEOUT_MS, 500);
+            $result = curl_exec($curl);
+        } catch (\Throwable $e) {
+            self::logger()->warnException('failed to get reference configuration from the registry, service name [' . $serviceName . ']', $e);
+        }
+        if ($result) {
+            $jsonResult = json_decode($result);
+            if ($jsonResult->status->code === 0) {
+                $config = $jsonResult->result->scfXml;
+                self::writeToCache($serviceName, $result);
+            }
+        }
+        return $config;
+    }
+
+    /**
      * @param string $callerKey
      */
     private function setCallerKey(string $callerKey): void
@@ -206,14 +227,4 @@ class Application
         }
     }
 
-    public static function logger(): ?Logger
-    {
-        self::verify();
-        return Application::$instance->logger;
-    }
-
-    public static function getAppName(): ?string{
-        self::verify();
-        return Application::$instance->appName;
-    }
 }
