@@ -1,12 +1,12 @@
 <?php
 
 
-namespace com\bj58\zhuanzhuan\zzscf\contract;
+namespace com\bj58\zhuanzhuan\zzscf\api\contract;
 
 
-use com\bj58\zhuanzhuan\zzscf\application\Application;
-use com\bj58\zhuanzhuan\zzscf\config\ApplicationConfig;
-use com\bj58\zhuanzhuan\zzscf\config\Reference;
+use com\bj58\zhuanzhuan\zzscf\api\application\Application;
+use com\bj58\zhuanzhuan\zzscf\api\config\ApplicationConfig;
+use com\bj58\zhuanzhuan\zzscf\api\config\Reference;
 use com\bj58\zhuanzhuan\zzscf\proxy\Proxy;
 
 abstract class AbstractService

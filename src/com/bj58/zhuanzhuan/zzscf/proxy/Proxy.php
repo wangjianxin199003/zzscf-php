@@ -4,9 +4,9 @@
 namespace com\bj58\zhuanzhuan\zzscf\proxy;
 
 
-use com\bj58\zhuanzhuan\zzscf\contract\Contract;
-use com\bj58\zhuanzhuan\zzscf\exception\RpcException;
-use com\bj58\zhuanzhuan\zzscf\exception\RpcExceptionCode;
+use com\bj58\zhuanzhuan\zzscf\api\contract\Contract;
+use com\bj58\zhuanzhuan\zzscf\api\exception\RpcException;
+use com\bj58\zhuanzhuan\zzscf\api\exception\RpcExceptionCode;
 use com\bj58\zhuanzhuan\zzscf\invoke\Invocation;
 
 class Proxy

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace com\bj58\zhuanzhuan\zzscf\exception;
+namespace com\bj58\zhuanzhuan\zzscf\api\exception;
 
 
 class RpcExceptionCode

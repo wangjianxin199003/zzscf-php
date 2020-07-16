@@ -1,7 +1,7 @@
 <?php
 
 
-namespace com\bj58\zhuanzhuan\zzscf\log;
+namespace com\bj58\zhuanzhuan\zzscf\api\log;
 
 
 abstract class AbstractLogger implements Logger

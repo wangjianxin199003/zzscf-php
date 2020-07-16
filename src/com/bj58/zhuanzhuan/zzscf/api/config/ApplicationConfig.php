@@ -1,10 +1,10 @@
 <?php
 
 
-namespace com\bj58\zhuanzhuan\zzscf\config;
+namespace com\bj58\zhuanzhuan\zzscf\api\config;
 
 
-use com\bj58\zhuanzhuan\zzscf\log\Logger;
+use com\bj58\zhuanzhuan\zzscf\api\log\Logger;
 
 class ApplicationConfig
 {

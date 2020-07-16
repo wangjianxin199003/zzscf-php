@@ -1,7 +1,7 @@
 <?php
 
 
-namespace com\bj58\zhuanzhuan\zzscf\contract;
+namespace com\bj58\zhuanzhuan\zzscf\api\contract;
 
 
 abstract class AbstractContract implements Contract

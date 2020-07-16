@@ -4,7 +4,7 @@
 namespace test;
 
 
-use com\bj58\zhuanzhuan\zzscf\contract\AbstractContract;
+use com\bj58\zhuanzhuan\zzscf\api\contract\AbstractContract;
 
 class StudentServiceContract extends AbstractContract
 {

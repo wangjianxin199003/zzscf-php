@@ -1,7 +1,7 @@
 <?php
 
 
-namespace com\bj58\zhuanzhuan\zzscf\config;
+namespace com\bj58\zhuanzhuan\zzscf\api\config;
 
 
 class RpcArgs

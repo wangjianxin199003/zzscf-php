@@ -4,9 +4,9 @@
 namespace com\bj58\zhuanzhuan\zzscf\util;
 
 
-use com\bj58\zhuanzhuan\zzscf\config\RpcArgs;
-use com\bj58\zhuanzhuan\zzscf\config\ServerNode;
-use com\bj58\zhuanzhuan\zzscf\config\ReferenceConfig;
+use com\bj58\zhuanzhuan\zzscf\api\config\RpcArgs;
+use com\bj58\zhuanzhuan\zzscf\api\config\ServerNode;
+use com\bj58\zhuanzhuan\zzscf\api\config\ReferenceConfig;
 
 class ReferenceConfigUtil
 {
