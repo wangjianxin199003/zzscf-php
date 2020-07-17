@@ -1,6 +1,7 @@
 <?php
 
 
+use com\bj58\zhuanzhuan\zzscf\util\StdClassUtil;
 use com\bj58\zhuanzhuan\zzscf\util\TraceUtils;
 use test\SleepService;
 use test\Student;
@@ -16,7 +17,10 @@ echo TraceUtils::getTraceId()."\n";
 print($sleepService->sleep(500)."\n");
 echo TraceUtils::getTraceId()."\n";
 $studentService = new StudentService();
-print_r($studentService->getStudent(1, "wang", 12));
+$returnedStudent = $studentService->getStudent(1, "wang", 12);
+if ($returnedStudent instanceof stdClass){
+    var_dump(StdClassUtil::stdClassToArray($returnedStudent));
+}
 echo TraceUtils::getTraceId()."\n";
 $student = new Student();
 $student->setId(2);

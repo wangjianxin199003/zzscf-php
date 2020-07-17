@@ -10,7 +10,7 @@ class StudentServiceContract extends AbstractContract
 {
     private $parameterTypes = array("getStudent" => array('long', 'String', 'int',
     ), "saveStudent" => array('Student'));
-    private $typeMap = array('test\Student' => 'com.bj58.zhuanzhuan.wjx.scf.server.test1.entity.Student',
+    private $typeMap = array(
         'test\Teacher'=>'com.bj58.zhuanzhuan.wjx.scf.server.test1.entity.Teacher');
 
     function getTypeMap(): array
