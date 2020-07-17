@@ -11,13 +11,13 @@ use com\bj58\zhuanzhuan\zzscf\util\ReferenceConfigUtil;
 
 class MyApplicationService extends AbstractService
 {
-
     /**
      * AbstractTestService constructor.
      */
     public function __construct(string $serviceName, string $interfaceName, Contract $contract, string $lookup = null)
     {
         static $applicationConfig;
+        // 不要重复构建
         if (!$applicationConfig) {
             $applicationConfig = new ApplicationConfig();
             $applicationConfig->setAppName("demophp");
@@ -25,7 +25,7 @@ class MyApplicationService extends AbstractService
             $document->load('scf.config.xml');
             $applicationConfig->setLocalServiceRefConfigs(ReferenceConfigUtil::parserMultiFromXmlDOMDocument($document));
             $applicationConfig->setCallerKey("Tm8dDO1dPUY4QqRU8r/kAw==");
-            parent::__construct($serviceName, $interfaceName, $contract, $lookup, $applicationConfig);
         }
+        parent::__construct($serviceName, $interfaceName, $contract, $lookup, $applicationConfig);
     }
 }

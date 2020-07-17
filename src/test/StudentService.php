@@ -4,12 +4,8 @@
 namespace test;
 
 
-use com\bj58\zhuanzhuan\zzscf\api\contract\AbstractService;
-
-class StudentService extends AbstractService
+class StudentService extends MyApplicationService
 {
-    private $ref;
-
     public function __construct()
     {
         parent::__construct("servertest1",'com.bj58.zhuanzhuan.wjx.scf.server.test1.contract.StudentService', new StudentServiceContract());
@@ -24,6 +20,5 @@ class StudentService extends AbstractService
     {
         return parent::getRef()->saveStudent($student);
     }
-
 
 }

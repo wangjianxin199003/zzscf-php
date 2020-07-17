@@ -6,8 +6,6 @@ namespace test;
 
 class SleepService extends MyApplicationService
 {
-    private $ref;
-
     /**
      * SleepService constructor.
      */
@@ -20,6 +18,4 @@ class SleepService extends MyApplicationService
     {
         return parent::getRef()->sleep($time);
     }
-
-
 }
