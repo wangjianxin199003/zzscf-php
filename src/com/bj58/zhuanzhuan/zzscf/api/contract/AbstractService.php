@@ -13,7 +13,7 @@ abstract class AbstractService
 {
     private $ref;
 
-    public function __construct(string $serviceName, Contract $contract, ApplicationConfig $applicationConfig = null)
+    public function __construct(string $serviceName, string $interfaceName, Contract $contract, string $lookup = null, ApplicationConfig $applicationConfig = null)
 
     {
         if (!Application::getInstance()) {
@@ -26,6 +26,8 @@ abstract class AbstractService
         $refConfig = new Reference();
         $refConfig->setServiceName($serviceName);
         $refConfig->setContract($contract);
+        $refConfig->setInterfaceName($interfaceName);
+        $refConfig->setLookup($lookup);
         $this->ref = $refConfig->ref();
     }
 
@@ -36,8 +38,6 @@ abstract class AbstractService
     {
         return $this->ref;
     }
-
-
 
 
 }

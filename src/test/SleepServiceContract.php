@@ -16,9 +16,5 @@ class SleepServiceContract extends AbstractContract
         return $this->parameterTypeMap[$methodName];
     }
 
-    function getRemoteInterfaceName(): string
-    {
-        return "com.bj58.zhuanzhuan.wjx.scf.server.test1.contract.SleepService";
-    }
 
 }

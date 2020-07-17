@@ -12,7 +12,7 @@ class StudentService extends AbstractService
 
     public function __construct()
     {
-        parent::__construct("servertest1", new StudentServiceContract());
+        parent::__construct("servertest1",'com.bj58.zhuanzhuan.wjx.scf.server.test1.contract.StudentService', new StudentServiceContract());
     }
 
     public function getStudent(int $id, string $name, int $age)

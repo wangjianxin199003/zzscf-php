@@ -13,7 +13,7 @@ class SleepService extends MyApplicationService
      */
     public function __construct()
     {
-        parent::__construct("servertest1", new SleepServiceContract());
+        parent::__construct("servertest1", 'com.bj58.zhuanzhuan.wjx.scf.server.test1.contract.SleepService', new SleepServiceContract());
     }
 
     public function sleep(int $time)

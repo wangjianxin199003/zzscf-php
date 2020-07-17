@@ -13,11 +13,6 @@ class StudentServiceContract extends AbstractContract
     private $typeMap = array('test\Student' => 'com.bj58.zhuanzhuan.wjx.scf.server.test1.entity.Student',
         'test\Teacher'=>'com.bj58.zhuanzhuan.wjx.scf.server.test1.entity.Teacher');
 
-    function getRemoteInterfaceName(): string
-    {
-        return 'com.bj58.zhuanzhuan.wjx.scf.server.test1.contract.StudentService';
-    }
-
     function getTypeMap(): array
     {
         return $this->typeMap;

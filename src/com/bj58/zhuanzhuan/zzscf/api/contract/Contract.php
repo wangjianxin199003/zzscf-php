@@ -10,7 +10,6 @@ interface Contract
 
     function getRemoteParameterTypes(string $methodName): array;
 
-    function getRemoteInterfaceName(): string;
 
     function getTypeMap(): array;
 

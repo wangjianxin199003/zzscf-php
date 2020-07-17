@@ -11,11 +11,6 @@ abstract class AbstractContract implements Contract
         return $methodName;
     }
 
-    function getRemoteInterfaceName(): string
-    {
-        return get_class($this);
-    }
-
     function getTypeMap(): array
     {
         return array();

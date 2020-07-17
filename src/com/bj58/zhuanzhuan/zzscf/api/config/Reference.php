@@ -14,6 +14,7 @@ class Reference
     private  $lookup = '';
     private  $serviceName;
     private  $contract;
+    private $interfaceName;
 
     public function ref(): Proxy
     {
@@ -24,7 +25,7 @@ class Reference
         $serverNodes = $refConfig->getServerNodes();
         $invokers = array();
         foreach ($serverNodes as $serverNode) {
-            $invoker = new Invoker($this->serviceName, $this->contract->getRemoteInterfaceName(), $this->lookup, $this->contract->getTypeMap(), $serverNode, $refConfig->getRpcArgs());
+            $invoker = new Invoker($this->serviceName, $this->interfaceName, $this->lookup, $this->contract->getTypeMap(), $serverNode, $refConfig->getRpcArgs());
             $invokers[] = $invoker;
         }
         return new Proxy($invokers, $this->contract);
@@ -33,7 +34,7 @@ class Reference
     /**
      * @return string
      */
-    public function getLookup(): string
+    public function getLookup(): ?string
     {
         return $this->lookup;
     }
@@ -41,7 +42,7 @@ class Reference
     /**
      * @param string $lookup
      */
-    public function setLookup(string $lookup): void
+    public function setLookup(?string $lookup): void
     {
         $this->lookup = $lookup;
     }
@@ -77,6 +78,24 @@ class Reference
     {
         $this->contract = $contract;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getInterfaceName()
+    {
+        return $this->interfaceName;
+    }
+
+    /**
+     * @param mixed $interfaceName
+     */
+    public function setInterfaceName($interfaceName): void
+    {
+        $this->interfaceName = $interfaceName;
+    }
+
+
 
 
 }

@@ -47,7 +47,7 @@ class Invoker
      * @param string $lookup
      * @param array $typeMap
      */
-    public function __construct(string $serviceName, string $interfaceName, string $lookup, array $typeMap, ServerNode $serverNode, RpcArgs $rpcArgs)
+    public function __construct(string $serviceName, string $interfaceName, ?string $lookup, array $typeMap, ServerNode $serverNode, RpcArgs $rpcArgs)
     {
         $this->serviceName = $serviceName;
         $this->interfaceName = $interfaceName;
