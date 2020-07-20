@@ -22,17 +22,22 @@ if ($returnedStudent instanceof stdClass){
     var_dump(StdClassUtil::stdClassToArray($returnedStudent));
 }
 echo TraceUtils::getTraceId()."\n";
-$student = new Student();
-$student->setId(2);
-$student->setName("zhang");
-$student->setAge(13);
-$student->setMap(array(0 => 'abc', null=>null));
-$teacher1 = new Teacher();
-$teacher1->setName("li");
-$teacher2 = new Teacher();
-$teacher2->setName("zhao");
-$student->setTeachers(array($teacher1, $teacher2));
-print $studentService->saveStudent($student);
+$student = new stdClass();
+$student->__type = 'com.bj58.zhuanzhuan.wjx.scf.server.test1.entity.Student';
+$student->id=2;
+$student->name = "wang";
+$student->age = 13;
+$studentService->saveStudent($student);
+//$student->setId(2);
+//$student->setName("zhang");
+//$student->setAge(13);
+//$student->setMap(array(0 => 'abc', null=>null));
+//$teacher1 = new Teacher();
+//$teacher1->setName("li");
+//$teacher2 = new Teacher();
+//$teacher2->setName("zhao");
+//$student->setTeachers(array($teacher1, $teacher2));
+//print $studentService->saveStudent($student);
 echo TraceUtils::getTraceId()."\n";
 
 

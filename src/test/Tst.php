@@ -3,7 +3,10 @@
 use com\bj58\zhuanzhuan\zzscf\util\SystemEnvUtils;
 require '..\..\vendor\autoload.php';
 
-echo uniqid('', true)."\n";
-echo uniqid('', true)."\n";
-//echo dechex(uniqid('', true));
-//echo str_pad(dechex(uniqid('', true)), 8, '0', STR_PAD_LEFT);
+$arr1 = array();
+$arr2 = array('abc'=>143, 'def'=>2343);
+$arr1[] = $arr2;
+foreach ($arr1 as &$item){
+    unset($item['abc']);
+}
+var_dump($arr1);

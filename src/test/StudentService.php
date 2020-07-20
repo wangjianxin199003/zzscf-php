@@ -16,7 +16,7 @@ class StudentService extends MyApplicationService
         return parent::getRef()->getStudent($id, $name, $age);
     }
 
-    public function saveStudent(Student $student)
+    public function saveStudent($student)
     {
         return parent::getRef()->saveStudent($student);
     }
