@@ -3,7 +3,7 @@
 
 namespace test;
 
-use com\bj58\zhuanzhuan\zzscf\api\contract\AbstractContract;
+use Com\BJ58\ZHUANZHUAN\ZZscf\Api\Contract\AbstractContract;
 
 class SleepServiceContract extends AbstractContract
 {

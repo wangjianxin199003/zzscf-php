@@ -1,17 +1,17 @@
 <?php
 
-use com\bj58\zhuanzhuan\zzscf\util\StdClassUtil;
+use Com\BJ58\ZHUANZHUAN\ZZscf\Util\StdClassUtil;
 
 require '..\..\vendor\autoload.php';
 
 
 $student = new stdClass();
 $student->name = "wang";
-$student->__type = 'com.bj58.Student';
+$student->__type = 'Com.BJ58.Student';
 
 $teacher = new stdClass();
 $teacher->age = 13;
-//$teacher->__type = 'com.bj58.Teacher';
+//$teacher->__type = 'Com.BJ58.Teacher';
 
 $student->teacher = $teacher;
 //var_dump($student);

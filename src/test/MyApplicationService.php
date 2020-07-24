@@ -4,10 +4,10 @@
 namespace test;
 
 
-use com\bj58\zhuanzhuan\zzscf\api\config\ApplicationConfig;
-use com\bj58\zhuanzhuan\zzscf\api\contract\AbstractService;
-use com\bj58\zhuanzhuan\zzscf\api\contract\Contract;
-use com\bj58\zhuanzhuan\zzscf\util\ReferenceConfigUtil;
+use Com\BJ58\ZHUANZHUAN\ZZscf\Api\Config\ApplicationConfig;
+use Com\BJ58\ZHUANZHUAN\ZZscf\Api\Contract\AbstractService;
+use Com\BJ58\ZHUANZHUAN\ZZscf\Api\Contract\Contract;
+use Com\BJ58\ZHUANZHUAN\ZZscf\Util\ReferenceConfigUtil;
 
 class MyApplicationService extends AbstractService
 {

@@ -1,8 +1,8 @@
 <?php
 
 
-use com\bj58\zhuanzhuan\zzscf\util\StdClassUtil;
-use com\bj58\zhuanzhuan\zzscf\util\TraceUtils;
+use Com\BJ58\ZHUANZHUAN\ZZscf\Util\StdClassUtil;
+use Com\BJ58\ZHUANZHUAN\ZZscf\Util\TraceUtils;
 use test\SleepService;
 use test\Student;
 use test\StudentService;
@@ -23,7 +23,7 @@ if ($returnedStudent instanceof stdClass){
 }
 echo TraceUtils::getTraceId()."\n";
 $student = new stdClass();
-$student->__type = 'com.bj58.zhuanzhuan.wjx.scf.server.test1.entity.Student';
+$student->__type = 'Com.BJ58.ZHUANZHUAN.wjx.scf.server.test1.entity.Student';
 $student->id=2;
 $student->name = "wang";
 $student->age = 13;

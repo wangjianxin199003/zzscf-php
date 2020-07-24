@@ -8,6 +8,13 @@
              <zzscf:node host="127.0.0.1" port="16546" version="1.1.18-SNAPSHOT" idc="bjm6"  systemEnv="testserver"/>
         </zzscf:nodes>
     </zzscf:referenceConfig>
+
+    <zzscf:referenceConfig serviceName="zzuser">
+        <zzscf:rpcArgs timeout="2000" connectTimeout="500"/>
+         <zzscf:nodes>
+             <zzscf:node host="192.168.152.178" port="16005" version="1.1.18-SNAPSHOT" idc="bjm6"  systemEnv="testserver"/>
+        </zzscf:nodes>
+    </zzscf:referenceConfig>
     <zzscf:referenceConfig serviceName="servertest2">
          <zzscf:nodes>
              <zzscf:node host="127.0.0.1" port="16547"/>

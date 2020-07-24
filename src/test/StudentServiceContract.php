@@ -4,14 +4,14 @@
 namespace test;
 
 
-use com\bj58\zhuanzhuan\zzscf\api\contract\AbstractContract;
+use Com\BJ58\ZHUANZHUAN\ZZscf\Api\Contract\AbstractContract;
 
 class StudentServiceContract extends AbstractContract
 {
     private $parameterTypes = array("getStudent" => array('long', 'String', 'int',
     ), "saveStudent" => array('Student'));
     private $typeMap = array(
-        'test\Teacher'=>'com.bj58.zhuanzhuan.wjx.scf.server.test1.entity.Teacher');
+        'test\Teacher'=>'Com.BJ58.ZHUANZHUAN.wjx.scf.server.test1.entity.Teacher');
 
     function getTypeMap(): array
     {

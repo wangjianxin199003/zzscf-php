@@ -1,6 +1,6 @@
 <?php
 
-use com\bj58\zhuanzhuan\zzscf\util\SystemEnvUtils;
+use Com\BJ58\ZHUANZHUAN\ZZscf\Util\SystemEnvUtils;
 require '..\..\vendor\autoload.php';
 
 $arr1 = array();
